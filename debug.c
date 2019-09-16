@@ -1,3 +1,5 @@
+#ifdef DEBUG
+
 #include <stdio.h>
 
 #include "chip8.h"
@@ -36,3 +38,4 @@ void info(CHIP8 chip8)
 
     puts("\n");
 }
+#endif

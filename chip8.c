@@ -103,16 +103,16 @@ static inline void _8XY3(){
 }
 static inline void _8XY4(){
   // Vx += Vy (carry)
-if( ((int) chip8.V[(chip8.opcode & 0x0F00) >> 8] + (int) chip8.V[(chip8.opcode & 0x00F0) >> 4]) < 256)
-    chip8.V[0xF] = 0;
+if( ((uint16_t) chip8.V[(chip8.opcode & 0x0F00) >> 8] + (uint16_t) chip8.V[(chip8.opcode & 0x00F0) >> 4]) > UINT8_MAX)
+    chip8.V[0xF] = 1;
 else
-    chip8.V[0xF] = 1;  
+    chip8.V[0xF] = 0;  
 
   chip8.V[(chip8.opcode & 0x0F00) >> 8] += chip8.V[(chip8.opcode & 0x00F0) >> 4];
 }
 static inline void _8XY5(){
   // Vx -= Vy (carry)
-if( ((int) chip8.V[(chip8.opcode & 0x0F00) >> 8] - (int) chip8.V[(chip8.opcode & 0x00F0) >> 4]) >= 0)
+if( ((uint16_t) chip8.V[(chip8.opcode & 0x0F00) >> 8] - (uint16_t) chip8.V[(chip8.opcode & 0x00F0) >> 4]) > 0)
     chip8.V[0xF] = 1;
 else
     chip8.V[0xF] = 0;
@@ -125,7 +125,7 @@ static inline void _8XY6(){
   chip8.V[((chip8.opcode & 0x0F00) >> 8)] = chip8.V[((chip8.opcode & 0x0F00) >> 8)] >> 1;
 }
 static inline void _8XY7(){
-if( ((int) chip8.V[(chip8.opcode & 0x0F00) >> 8] - (int) chip8.V[(chip8.opcode & 0x00F0) >> 4]) > 0)
+if( ((uint16_t) chip8.V[(chip8.opcode & 0x00F0) >> 4] - (uint16_t) chip8.V[(chip8.opcode & 0x0F00) >> 8]) > 0)
     chip8.V[0xF] = 1;
 else
     chip8.V[0xF] = 0;
@@ -422,7 +422,7 @@ void CHIP8_Emulate()
     if(chip8.sound_timer > 0)
     {
       if (chip8.sound_timer == 1)
-        printf("\a\n");
+        printf("\a");
       chip8.sound_timer--; 
     }
     #if DEBUG

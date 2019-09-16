@@ -17,7 +17,6 @@ int main(int argc, char *argv[])
     printf("Usgae: %s <CHIP-8 ROM>\n", *argv);
     return 0;
   }
-
   CHIP8_Init();
   CHIP8_Load(argv[1]);
   
@@ -26,6 +25,8 @@ int main(int argc, char *argv[])
     GFX_Close();
     return -1;
   }
+
+  setbuf(stdout, NULL);
   
   for(;;)
   {

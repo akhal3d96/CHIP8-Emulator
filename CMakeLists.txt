@@ -17,7 +17,7 @@ find_package(SDL2 REQUIRED)
 include_directories(${SDL2_INCLUDE_DIRS})
 add_executable(chip8emu ${SOURCES})
 set_property(TARGET chip8emu PROPERTY C_STANDARD 99)
-target_compile_options(chip8emu PRIVATE -Wall -Wextra -pedantic)
+target_compile_options(chip8emu PRIVATE -O3 -Wall -Wextra -pedantic)
 target_link_libraries(chip8emu PUBLIC SDL2::SDL2)    
 
 
