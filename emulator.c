@@ -2,7 +2,12 @@
 #include <errno.h>
 #include <string.h>
 #include <stdbool.h>
+
+#ifdef _WIN32
+#include <SDL.h>
+#else
 #include <SDL2/SDL.h>
+#endif
 
 #include "chip8.h"
 #include "sdl.h"

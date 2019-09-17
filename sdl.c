@@ -1,7 +1,12 @@
 #include <stdio.h>
 #include <stdint.h>
 #include <stdbool.h>
+
+#ifdef _WIN32
+#include <SDL.h>
+#else
 #include <SDL2/SDL.h>
+#endif
 
 #include "sdl.h"
 

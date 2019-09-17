@@ -257,13 +257,18 @@ void CHIP8_Init()
 
 void CHIP8_Load(const char * ROM) {
 
-    FILE * ROM_STREAM = fopen(ROM,"rb");
+	#ifdef _WIN32
+	FILE * ROM_STREAM = NULL;
+	fopen_s(&ROM_STREAM, ROM, "rb");
+	#else
+	FILE * ROM_STREAM = fopen(ROM, "rb");
+	#endif
     if(ROM_STREAM == NULL) {
         perror("Couldn't open ROM file");
         exit(errno);    
     }
 
-    int ret = fread(&chip8.memory[0x200],sizeof(chip8.memory)-0x200,1,ROM_STREAM);
+    size_t ret = fread(&chip8.memory[0x200],sizeof(chip8.memory)-0x200,1,ROM_STREAM);
     if(!ret && !feof(ROM_STREAM)) {
         perror("Error reading ROM file");
         exit(errno);
