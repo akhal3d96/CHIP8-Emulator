@@ -17,6 +17,8 @@ SDL_Event gEvent;
 
 int main(int argc, char *argv[])
 {
+  puts("CHIP-8 Emulator (c) 2019 Ahmed Khaled");
+  puts("More information at: https://github.com/nemoload/chip8-emulator");
   if(argc < 2)
   {
     printf("Usgae: %s <CHIP-8 ROM>\n", *argv);

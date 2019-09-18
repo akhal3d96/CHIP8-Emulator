@@ -39,69 +39,69 @@ uint8_t gen_rand(uint8_t limit) {
     return retval;
 }
 
-static inline void _0NNN(){
+inline void _0NNN(){
   puts("0x0NNN: unimplemented opcode\n");
 }
-static inline void _00E0(){
+inline void _00E0(){
   // Clears the screen
   memset(chip8.GFX,0,sizeof(chip8.GFX));
 }
-static inline void _00EE(){
+inline void _00EE(){
  // Returns from a subroutine
  chip8.PC = chip8.stack[--chip8.SP];
 //  chip8.PC-=2;
 }
-static inline void _1NNN(){
+inline void _1NNN(){
   // Jumps to address NNN
   chip8.PC = chip8.opcode & 0x0FFF;
   chip8.PC -=2;
 }
-static inline void _2NNN(){
+inline void _2NNN(){
     // Call subroutine
     chip8.stack[chip8.SP++] = chip8.PC;
     chip8.PC = chip8.opcode & 0x0FFF;
     chip8.PC -=2;
 }
-static inline void _3XNN(){
+inline void _3XNN(){
     // Skips next instruction if VX == NN
   if (chip8.V[ (chip8.opcode & 0x0F00) >> 8] == (chip8.opcode & 0x00FF))
     chip8.PC += 2;
 }
-static inline void _4XNN(){
+inline void _4XNN(){
      // Skips next instruction if VX != NN
     if (chip8.V[(chip8.opcode & 0x0F00) >> 8] != (chip8.opcode & 0x00FF))
     chip8.PC += 2;
 }
-static inline void _5XY0(){
+inline void _5XY0(){
   // Skips next instruction if Vx == Vy
   if (chip8.V[(chip8.opcode & 0x0F00) >> 8] == chip8.V[((chip8.opcode & 0x00F0)) >> 4] )
     chip8.PC += 2; 
 }
-static inline void _6XNN(){
+inline void _6XNN(){
   // VX = NN
   chip8.V[(chip8.opcode & 0x0F00) >> 8] = chip8.opcode & 0x00FF;
 }
-static inline void _7XNN(){
+inline void _7XNN(){
   // Vx += NN
   chip8.V[(chip8.opcode & 0x0F00) >> 8] += (chip8.opcode & 0x00FF);
 }
-static inline void _8XY0(){
+inline void _8XY0(){
   // Vx = Vy
   chip8.V[(chip8.opcode & 0x0F00) >> 8] = chip8.V[(chip8.opcode & 0x00F0) >> 4];
 }
-static inline void _8XY1(){
+inline void _8XY1(){
   // Vx |= Vy
   chip8.V[(chip8.opcode & 0x0F00) >> 8] |= chip8.V[(chip8.opcode & 0x00F0) >> 4];
 }
-static inline void _8XY2(){
+inline void _8XY2(){
   // Vx &= Vy
   chip8.V[(chip8.opcode & 0x0F00) >> 8] &= chip8.V[(chip8.opcode & 0x00F0) >> 4];
 }
-static inline void _8XY3(){
+inline void _8XY3(){
   // Vx^=Vy 
   chip8.V[(chip8.opcode & 0x0F00) >> 8] ^= chip8.V[(chip8.opcode & 0x00F0) >> 4];
 }
-static inline void _8XY4(){
+inline void _8XY4(){
   // Vx += Vy (carry)
 if( ((uint16_t) chip8.V[(chip8.opcode & 0x0F00) >> 8] + (uint16_t) chip8.V[(chip8.opcode & 0x00F0) >> 4]) > UINT8_MAX)
     chip8.V[0xF] = 1;
@@ -110,7 +110,7 @@ else
 
   chip8.V[(chip8.opcode & 0x0F00) >> 8] += chip8.V[(chip8.opcode & 0x00F0) >> 4];
 }
-static inline void _8XY5(){
+inline void _8XY5(){
   // Vx -= Vy (carry)
 if( ((uint16_t) chip8.V[(chip8.opcode & 0x0F00) >> 8] - (uint16_t) chip8.V[(chip8.opcode & 0x00F0) >> 4]) > 0)
     chip8.V[0xF] = 1;
@@ -119,12 +119,12 @@ else
   
   chip8.V[(chip8.opcode & 0x0F00) >> 8] -= chip8.V[(chip8.opcode & 0x00F0) >> 4];
 }
-static inline void _8XY6(){
+inline void _8XY6(){
   //Least significant bit of VX in VF and then shifts VX to the right by 1
   chip8.V[0xF] = chip8.V[((chip8.opcode & 0x0F00) >> 8)] & 7;
   chip8.V[((chip8.opcode & 0x0F00) >> 8)] = chip8.V[((chip8.opcode & 0x0F00) >> 8)] >> 1;
 }
-static inline void _8XY7(){
+inline void _8XY7(){
 if( ((uint16_t) chip8.V[(chip8.opcode & 0x00F0) >> 4] - (uint16_t) chip8.V[(chip8.opcode & 0x0F00) >> 8]) > 0)
     chip8.V[0xF] = 1;
 else
@@ -133,29 +133,29 @@ else
   chip8.V[(chip8.opcode & 0x0F00) >> 8] = chip8.V[(chip8.opcode & 0x00F0) >> 4] - chip8.V[(chip8.opcode & 0x0F00) >> 8];
 
 }
-static inline void _8XYE(){
+inline void _8XYE(){
   // Stores the most significant bit of VX in VF and then shifts VX to the left by 1 
   chip8.V[0xF] = chip8.V[((chip8.opcode & 0x0F00) >> 8)] & 7;
   chip8.V[((chip8.opcode & 0x0F00) >> 8)] = chip8.V[((chip8.opcode & 0x0F00) >> 8)] << 1;
 
 }
-static inline void _9XY0(){
+inline void _9XY0(){
   // Skips the next instruction if VX != VY. (Usually the next instruction is a jump to skip a code block) 
   if(chip8.V[(chip8.opcode & 0x0F00) >> 8] != chip8.V[(chip8.opcode & 0x00F0) >> 4])
     chip8.PC += 2;    
 }
-static inline void ANNN() {
+inline void ANNN() {
   // Set I to NNN
   chip8.I = chip8.opcode & 0x0FFF;
 }
-static inline void BNNN(){
+inline void BNNN(){
   chip8.PC = chip8.V[0] + (chip8.opcode & 0x0FFF);
   chip8.PC-=2;
 }
-static inline void CXNN(){
+inline void CXNN(){
   chip8.V[(chip8.opcode & 0x0F00) >> 8] = gen_rand(UINT8_MAX) & (chip8.opcode & 0x00FF);
 }
-static inline void DXYN(){
+inline void DXYN(){
   // Draws a sprite at coordinate (VX, VY) that has a width of 8 pixels and a height of N pixels.
   register const uint16_t X = chip8.V[(chip8.opcode & 0x0F00) >> 8];
   register const uint16_t Y = chip8.V[(chip8.opcode & 0x00F0) >> 4];
@@ -180,22 +180,22 @@ static inline void DXYN(){
     }
   }
 }
-static inline void EX9E(){
+inline void EX9E(){
   // Skips the next instruction if the key stored in VX is pressed.
   if(chip8.key == chip8.V[(chip8.opcode & 0x0F00) >> 8])
     chip8.PC += 2;  
 }
-static inline void EXA1(){
+inline void EXA1(){
   // Skips the next instruction if the key stored in VX isn't pressed.
     if(chip8.key != chip8.V[(chip8.opcode & 0x0F00) >> 8])
     chip8.PC += 2;
 }
-static inline void FX07(){
+inline void FX07(){
   // Set Vx to timer value
   chip8.V[(chip8.opcode & 0x0F00) >> 8] = chip8.delay_timer;
   // getchar();
 }
-static inline void FX0A(){
+inline void FX0A(){
   // Wait for key
   if(chip8.key == 0xFF)
     chip8.PC -= 2;
@@ -204,35 +204,35 @@ static inline void FX0A(){
     
   chip8.key = 0xFF;
 }
-static inline void FX15(){
+inline void FX15(){
   // Set delay timer to Vx
    chip8.delay_timer = chip8.V[(chip8.opcode & 0x0F00) >> 8];
 }
-static inline void FX18(){
+inline void FX18(){
   // Set sound timer
   chip8.sound_timer = chip8.V[(chip8.opcode & 0x0F00) >> 8];
 }
-static inline void FX1E(){
+inline void FX1E(){
     chip8.I += chip8.V[(chip8.opcode & 0x0F00) >> 8];
 }
-static inline void FX29(){
+inline void FX29(){
   chip8.I = chip8.V[(chip8.opcode & 0x0F00) >> 8] * 5;
 }
-static inline void FX33(){
+inline void FX33(){
   chip8.memory[chip8.I] = (chip8.V[(chip8.opcode & 0x0F00) >> 8 ]/100);     // Hundreds
   chip8.memory[chip8.I + 1] = (chip8.V[(chip8.opcode & 0x0F00) >> 8 ]/10)%10;  // Tens
   chip8.memory[chip8.I + 2] = chip8.V[(chip8.opcode & 0x0F00) >> 8 ]%10;      // Ones
 }
-static inline void FX55(){
+inline void FX55(){
   for(size_t i = 0;i <= ( (chip8.opcode & 0x0F00) >> 8);i++)
     chip8.memory[chip8.I+i] = chip8.V[i];
 }
-static inline void FX65(){
+inline void FX65(){
   for(size_t i = 0;i <= ( (chip8.opcode & 0x0F00) >> 8);i++)
     chip8.V[i] = chip8.memory[chip8.I+i];
 }
 
-static inline void opcode_error()
+inline void opcode_error()
 {
   fprintf(stderr,"Uknown chip8.opcode 0x%X\n",chip8.opcode);
   getchar();
