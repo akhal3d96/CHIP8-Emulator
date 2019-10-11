@@ -35,9 +35,10 @@ int main(int argc, char *argv[])
 
   setbuf(stdout, NULL);
   
+  bool pause = false;
+  
   for(;;)
   {
-    CHIP8_Emulate();
     while(SDL_PollEvent(&gEvent) != 0)
     {
         if(gEvent.type == SDL_QUIT)
@@ -112,6 +113,8 @@ int main(int argc, char *argv[])
             case SDLK_f:
               chip8.key = 0xF;
               break;
+            case SDLK_p:
+              pause = !pause;
             default: break;
           }
         }
@@ -120,6 +123,15 @@ int main(int argc, char *argv[])
           chip8.key = 0xFF;
         }
     }
+
+    if (pause)
+    {
+      SDL_Delay(100);
+      continue;
+    }
+    
+    CHIP8_Emulate();
+    
     if(isGFXDraw) 
     {
       GFX_Draw(chip8.GFX);

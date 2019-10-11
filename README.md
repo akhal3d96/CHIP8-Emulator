@@ -35,3 +35,5 @@ The `ROMS` directory contains public domain CHIP-8 programs which can be run usi
 After building it, the executable file can be used like:
 
 `$ ./chip8emu ../ROMS/PONG #CHIP-8 program location`
+
+Also you can press `p` to pause the game.
